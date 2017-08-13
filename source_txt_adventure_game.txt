@@ -1,0 +1,211 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <conio.h>
+
+#include "Room.h"
+#include "Player.h"
+
+using namespace std;
+
+#define NO_EXIT -1
+
+Room rooms[19];
+
+Player player(0);
+
+fstream filestr;
+string line;
+int pos = 0;
+
+void MainManu();
+void Play();
+void SaveGame();
+void LoadSave();
+string availableDirections(int currentPos);
+int MoveDirection(int currentPos, char newDirection);
+
+
+int main()
+{
+	filestr.open("rooms.txt");
+
+	while (!filestr.eof())
+	{
+		getline(filestr, line);
+		rooms[pos].setDescription(line);
+
+		getline(filestr, line);
+		rooms[pos].setNorth(stoi(line));
+
+		getline(filestr, line);
+		rooms[pos].setEast(stoi(line));
+
+		getline(filestr, line);
+		rooms[pos].setSouth(stoi(line));
+
+		getline(filestr, line);
+		rooms[pos].setWest(stoi(line));
+
+		pos++;
+	}
+	filestr.close();
+
+	/*for (int loop = 0; loop < 3; loop++)
+	{
+	cout << "desc = " << rooms[loop].getDescription() << endl;
+	cout << "n = " << rooms[loop].getNorth() << endl;
+	cout << "e = " << rooms[loop].getEast() << endl;
+	cout << "s = " << rooms[loop].getSouth() << endl;
+	cout << "w = " << rooms[loop].getWest() << endl;
+	}*/
+
+	MainManu();
+
+	//system("pause");
+	return 0;
+}
+
+void MainManu()
+{
+	int choice;
+
+	cout << "Main Menu" << endl;
+	cout << "1 - Play" << endl;
+	cout << "2 - Load save" << endl;
+	cout << "9 - Exit" << endl;
+	cout << "Enter : " << endl;
+
+	cin >> choice;
+
+	while (choice != 9)
+	{
+		if (choice == 1)
+		{
+			Play();
+		}
+
+
+		cout << "Main Menu" << endl;
+		cout << "1 - Play" << endl;
+		cout << "9 - Exit" << endl;
+		cout << "Enter : " << endl;
+
+		cin >> choice;
+	}
+}
+
+void Play()
+{
+
+	char choice;
+
+	player.setInventory("Bucket");
+
+	system("cls");
+	cout << "Description = " << rooms[player.getPlayerPos()].getDescription() << endl;
+	cout << "Available Directions are : " << availableDirections(player.getPlayerPos()) << endl;
+	cout << "Room cointains = " << rooms[player.getPlayerPos()].getInventory();
+	cout << "      Player is carrying = " << player.getInventory() << endl;
+	cout << "Q = quit, N, E, S, W are possible directions" << endl;
+	cout << "Enter : ";
+
+	choice = toupper(_getch());
+	while (choice != 'Q')
+	{
+		if (choice == 'D')
+		{
+			if (player.getInventory() != "nothing")
+			{
+				rooms[player.getPlayerPos()].setInventory(player.getInventory());
+				player.setInventory("nothing");
+			}
+		}
+		if (choice == 'P')
+		{
+			if (rooms[player.getPlayerPos()].getInventory() != "nothing")
+			{
+				player.setInventory(rooms[player.getPlayerPos()].getInventory());
+				rooms[player.getPlayerPos()].setInventory("nothing");
+			}
+		}
+		if (choice == 'Z')
+		{
+			SaveGame;
+			cout << "game have been saved" << endl;
+		}
+
+
+		player.setPlayerPos(MoveDirection(player.getPlayerPos(), choice));
+
+		system("cls");
+		cout << "Description = " << rooms[player.getPlayerPos()].getDescription() << endl;
+		cout << "Available Directions are : " << availableDirections(player.getPlayerPos()) << endl;
+		cout << "Room cointains = " << rooms[player.getPlayerPos()].getInventory();
+		cout << "      Player is carrying = " << player.getInventory() << endl;
+		cout << "Q = quit, N, E, S, W are possible directions" << endl;
+		cout << "Z - Save game" << endl;
+		cout << "Enter : ";
+		choice = toupper(_getch());
+	}
+
+}
+
+int MoveDirection(int currentPos, char newDirection)
+{
+	if ((newDirection == 'N') && (rooms[currentPos].getNorth() != NO_EXIT))
+	{
+		currentPos = rooms[currentPos].getNorth();
+	}
+	if ((newDirection == 'E') && (rooms[currentPos].getEast() != NO_EXIT))
+	{
+		currentPos = rooms[currentPos].getEast();
+	}
+	if ((newDirection == 'S') && (rooms[currentPos].getSouth() != NO_EXIT))
+	{
+		currentPos = rooms[currentPos].getSouth();
+	}
+	if ((newDirection == 'W') && (rooms[currentPos].getWest() != NO_EXIT))
+	{
+		currentPos = rooms[currentPos].getWest();
+	}
+	return currentPos;
+}
+
+string availableDirections(int currentPos)
+{
+	string result = "";
+
+	if (rooms[currentPos].getNorth() != NO_EXIT)
+	{
+		result = result + "N ";
+	}
+	if (rooms[currentPos].getEast() != NO_EXIT)
+	{
+		result = result + "E ";
+	}
+	if (rooms[currentPos].getSouth() != NO_EXIT)
+	{
+		result = result + "S ";
+	}
+	if (rooms[currentPos].getWest() != NO_EXIT)
+	{
+		result = result + "W ";
+	}
+	return result;
+}
+
+void SaveGame()
+{
+	//ofstream myfile;
+	std::ofstream myfile("save1.txt", std::ofstream::out);
+	myfile.open("save1.txt");
+	myfile << "123123123";
+	myfile.close();
+
+}
+
+void LoadSave()
+{
+
+}

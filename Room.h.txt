@@ -1,0 +1,106 @@
+#include <string>
+
+using namespace std;
+
+#define NO_EXIT -1
+
+class Room
+{
+private:
+	int North;
+	int East;
+	int South;
+	int West;
+	string description;
+	string inventory;
+
+public:
+	Room();
+	int getNorth();
+	void setNorth(int newNorth);
+
+	int getEast();
+	void setEast(int newEast);
+
+	int getSouth();
+	void setSouth(int newSouth);
+
+	int getWest();
+	void setWest(int newWest);
+
+	string getDescription();
+	void setDescription(string newDesc);
+
+	string getInventory();
+	void setInventory(string newInv);
+};
+
+Room::Room()
+{
+	North = NO_EXIT;
+	East = NO_EXIT;
+	South = NO_EXIT;
+	West = NO_EXIT;
+	description = "undefined";
+	inventory = "nothing";
+}
+
+int Room::getNorth()
+{
+	return North;
+}
+
+void Room::setNorth(int newNorth)
+{
+	North = newNorth;
+}
+
+int Room::getEast()
+{
+	return East;
+}
+
+void Room::setEast(int newEast)
+{
+	East = newEast;
+}
+
+int Room::getSouth()
+{
+	return South;
+}
+
+void Room::setSouth(int newSouth)
+{
+	South = newSouth;
+}
+
+int Room::getWest()
+{
+	return West;
+}
+
+void Room::setWest(int newWest)
+{
+	West = newWest;
+}
+
+string Room::getDescription()
+{
+	return description;
+}
+
+void Room::setDescription(string newDesc)
+{
+	description = newDesc;
+}
+
+string Room::getInventory()
+{
+	return inventory;
+}
+
+void Room::setInventory(string newInv)
+{
+	inventory = newInv;
+}

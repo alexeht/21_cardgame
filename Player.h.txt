@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Player
+{
+private:
+	string inventory;
+	int playerPos;
+public:
+	Player(int startPos);
+	string getInventory();
+	void setInventory(string newInv);
+
+
+	int getPlayerPos();
+	void setPlayerPos(int newPlayerPos);
+};
+
+Player::Player(int startPos)
+{
+	playerPos = 0;
+	inventory = "nothing";
+}
+
+string Player::getInventory()
+{
+	return inventory;
+}
+
+void Player::setInventory(string newInv)
+{
+	inventory = newInv;
+}
+
+int Player::getPlayerPos()
+{
+	return playerPos;
+}
+
+void Player::setPlayerPos(int newPlayerPos)
+{
+	playerPos = newPlayerPos;
+}
