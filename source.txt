@@ -1,0 +1,329 @@
+#include <iostream>
+#include <conio.h>
+#include <cstdlib> // For rand and srand
+#include <ctime> // For the time function
+
+using namespace std;
+
+#define spade 06 //Used to print spade symbol
+#define club 05 //Used to print club symbol
+#define diamond 04 //Used to print diamond symbol
+#define heart 03 //Used to print heart symbol
+
+enum Suits { HEART, DIAMOND, CLUB, SPADE };
+
+
+struct ACard
+{
+	int value;			// A 2,3,4,5,6,7,8,9,10 J Q K
+	Suits suit;			// H , D, S, C
+	int numericValue;	// A=1, 2=2, etc. J, Q, K = 10
+};
+
+const int NUM_CARDS = 52;
+const int CARDS_PER_SUIT = 13;
+ACard Pack[NUM_CARDS];		// 0 to 51 = 52
+
+void SetupPack();
+void DisplayPack();
+
+char DisplaySuit(Suits suitValue);
+
+void ShufflePack();
+
+int top_of_deck = 0; //current top
+int player_score = 0;
+int computer_score = 0;
+int player_choice = 0;
+
+void deal_card();
+void deal_firstcards();
+bool stay;
+char choice = NULL;
+void playerChoice(int& pTotal, char choice, bool& stay);
+
+ACard DealCard(int pos);
+ACard current_card;
+
+void MainMenu();
+void PlayerChoice();
+void scoring();
+void PlayGame();
+
+int main()
+{
+	MainMenu();
+	
+	
+
+	
+	cout << "Player score = " << player_score << endl;
+	cout << "Computer score = " << computer_score << endl;
+
+	scoring();
+
+	getch();
+	return 0;
+}
+
+ACard DealCard(int pos)
+{
+	return Pack[pos];
+}
+
+void SetupPack()
+{
+	for (int loop = 0; loop <= 12; loop++)
+	{
+		Pack[loop].value = loop + 1;
+		Pack[loop].suit = HEART;
+		Pack[loop].numericValue = loop + 1;
+	}
+
+	Pack[10].numericValue = 10;
+	Pack[11].numericValue = 10;
+	Pack[12].numericValue = 10;
+
+	for (int loop = 13; loop <= 25; loop++)
+	{
+		Pack[loop].value = loop + 1 - 13;
+		Pack[loop].suit = DIAMOND;
+		Pack[loop].numericValue = loop + 1 - 13;
+	}
+
+	Pack[23].numericValue = 10;
+	Pack[24].numericValue = 10;
+	Pack[25].numericValue = 10;
+
+	for (int loop = 26; loop <= 38; loop++)
+	{
+		Pack[loop].value = loop - 25;
+		Pack[loop].suit = CLUB;
+		Pack[loop].numericValue = loop - 25;
+	}
+
+	Pack[36].numericValue = 10;
+	Pack[37].numericValue = 10;
+	Pack[38].numericValue = 10;
+
+	for (int loop = 39; loop <= 51; loop++)
+	{
+		Pack[loop].value = loop - 38;
+		Pack[loop].suit = SPADE;
+		Pack[loop].numericValue = loop - 38;
+	}
+
+	Pack[49].numericValue = 10;
+	Pack[50].numericValue = 10;
+	Pack[51].numericValue = 10;
+}
+
+void DisplayPack()
+{
+	for (int loop = 0; loop <= NUM_CARDS - 1; loop++)
+	{
+		cout << "value = " << Pack[loop].value;
+		cout << " Numeric value = " << Pack[loop].numericValue;
+		cout << " Suit = " << DisplaySuit(Pack[loop].suit);
+		cout << endl;
+	}
+}
+
+char DisplaySuit(Suits suitValue)
+{
+	if (suitValue == HEART)
+		return heart;
+	else if (suitValue == DIAMOND)
+		return diamond;
+	else if (suitValue == CLUB)
+		return club;
+	else if (suitValue == SPADE)
+		return spade;
+}
+
+void ShufflePack()
+{
+	// Get the system time.
+	unsigned seed = time(0);
+
+	// Seed the random number generator.
+	srand(seed);
+
+	for (int shuffle = 0; shuffle < 100; shuffle++)
+	{
+		// 0 to 51
+		int rndNum1 = rand() % 51;
+		int rndNum2 = rand() % 51;
+
+		ACard tempCard;
+
+		tempCard = Pack[rndNum1];
+
+		Pack[rndNum1] = Pack[rndNum2];
+
+		Pack[rndNum2] = tempCard;
+	}
+}
+
+void deal_firstcards()
+{
+	current_card = DealCard(top_of_deck);
+	top_of_deck++;
+	cout << "Card = " << current_card.value << " " << "Suit = " << DisplaySuit(current_card.suit) << " " << "Scoring Value = " << current_card.numericValue << endl;
+	computer_score = computer_score + current_card.numericValue;
+	current_card = DealCard(top_of_deck);
+	top_of_deck++;
+	cout << "Card = " << current_card.value << " " << "Suit = " << DisplaySuit(current_card.suit) << " " << "Scoring Value = " << current_card.numericValue << endl;
+	computer_score = computer_score + current_card.numericValue;
+	
+	current_card = DealCard(top_of_deck);
+	top_of_deck++;
+	cout << "Card = " << current_card.value << " " << "Suit = " << DisplaySuit(current_card.suit) << " " << "Scoring Value = " << current_card.numericValue << endl;
+	player_score = player_score + current_card.numericValue;
+	current_card = DealCard(top_of_deck);
+	top_of_deck++;
+	cout << "Card = " << current_card.value << " " << "Suit = " << DisplaySuit(current_card.suit) << " " << "Scoring Value = " << current_card.numericValue << endl;
+	player_score = player_score + current_card.numericValue;
+}
+
+void deal_card()
+{
+	current_card = DealCard(top_of_deck);
+	top_of_deck++;
+	cout << "Card = " << current_card.value << " " << "Suit = " << DisplaySuit(current_card.suit) << " " << "Scoring Value = " << current_card.numericValue << endl;
+	player_score = player_score + current_card.numericValue;
+
+	current_card = DealCard(top_of_deck);
+	top_of_deck++;
+	cout << "Card = " << current_card.value << " " << "Suit = " << DisplaySuit(current_card.suit) << " " << "Scoring Value = " << current_card.numericValue << endl;
+	computer_score = computer_score + current_card.numericValue;
+}
+
+void MainMenu()
+{
+	cout << "---Main menu---" << endl;
+	cout << "---[P]lay--------" << endl;
+	cout << "---[A]bout-------" << endl;
+	cout << "---[E]xit--------" << endl;
+
+	cin >> player_choice;
+
+	while (player_choice != 'e')
+	{
+		if (player_choice != 'a')
+		{
+			PlayGame();
+			player_choice == 0;
+		}
+		else
+		{
+			cout << "-About-" << endl;
+		}
+	}
+
+}
+
+void PlayerChoice()
+{
+	cout << "[h]it, [s]tand,"<< endl; // ??
+	cin >> player_choice;
+}
+
+void PlayGame() //playerchoice?
+{
+	SetupPack();
+
+	//DisplayPack();
+
+	ShufflePack();
+
+	cout << "SHUFFLED >>>>>>>>>>>>>>>>>>>>>" << endl;
+
+	//DisplayPack();
+
+	deal_firstcards();
+	//deal_card(); // test
+
+	PlayerChoice();
+	while (player_choice != 's') // exit
+	{
+		if (player_choice == 'h') //hit
+		{
+			cout << "_hit_" << endl;
+			deal_card();
+		}
+		/*else if (player_choice == 'd') // double
+		{
+
+		}*/
+		/*else if (player_choice == 'p') // split
+		{
+
+		}*/	
+	}
+	cout << "_stand_" << endl; // test
+}
+
+void scoring()
+{
+	if (player_score == computer_score)
+	{
+		cout << "Push" << endl; //tie
+	}
+
+	else if (player_score == 21)
+	{
+		cout << "Blackjack" << endl; //21
+	}
+	else if (player_score > computer_score) // not working
+	{
+		if (player_score > 21)
+		{
+			cout << "Computer wins" << endl;
+		}
+		else
+		{
+			cout << "Player wins!" << endl;
+		}
+	}
+	else if (computer_score > player_score)
+	{
+		if (computer_score > 21)
+		{
+			cout << "Player wins" << endl;
+		}
+		else
+		{
+			cout << "Computer wins" << endl;
+		}
+	}
+	else if (player_score > 21)
+	{
+		cout << "Player bust" << endl; // ?
+	}
+	else if (computer_score > 21)
+	{
+		cout << "Computer bust" << endl; // ?
+	}
+}
+
+void playerChoice(int& pTotal, char choice, bool& stay)
+{
+	// If the user wants to hit
+	if (choice == 'H' || choice == 'h') 
+	
+	{
+
+		// If the user hits 21 or above
+		//if ((pTotal += getCard()) >= 21) //get card wtf
+	//	{
+	//		cout << "Your total is " << pTotal;
+	//		stay = true;
+	//	}
+
+		return;
+	}
+
+	
+	stay = true;  // Since the only other option can be to stay, then stay
+}
